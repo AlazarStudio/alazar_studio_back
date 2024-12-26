@@ -48,15 +48,4 @@ model Product {
   categories Category[]
 }
 
-model Discussion {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  name    String
-  phone   String
-  email   String
-  company String
-  budget  Int
-  message String
-}
+model Discussion

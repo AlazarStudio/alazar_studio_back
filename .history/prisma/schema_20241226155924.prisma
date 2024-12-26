@@ -58,5 +58,4 @@ model Discussion {
   email   String
   company String
   budget  Int
-  message String
 }

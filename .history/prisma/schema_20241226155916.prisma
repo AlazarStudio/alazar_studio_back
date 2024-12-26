@@ -57,6 +57,5 @@ model Discussion {
   phone   String
   email   String
   company String
-  budget  Int
-  message String
+  bu
 }

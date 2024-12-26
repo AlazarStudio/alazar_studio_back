@@ -281,6 +281,7 @@ const saveDataToDatabase = async (shop) => {
   }
 };
 
+
 // Продукты
 app.use('/api/products', productRoutes);
 
@@ -288,7 +289,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
-app.use('/api/discussion', discussionRoutes);
+app.use('/api/feedBack', discussionRoutes);
 
 // Обработка ошибок
 app.use(notFound);

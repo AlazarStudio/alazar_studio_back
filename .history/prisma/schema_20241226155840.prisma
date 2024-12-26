@@ -53,10 +53,7 @@ model Discussion {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  name    String
-  phone   String
-  email   String
-  company String
-  budget  Int
-  message String
+  name  String
+  phone String
+  
 }

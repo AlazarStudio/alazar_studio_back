@@ -15,7 +15,11 @@ import authRoutes from './app/auth/auth.routes.js';
 import userRoutes from './app/user/user.routes.js';
 import productRoutes from './app/product/product.routes.js';
 import categoryRoutes from './app/category/category.routes.js';
-import discussionRoutes from './app/discussion/discussion.routes.js';
+import subCategoryRoutes from './app/subCategory/subCategory.routes.js';
+import newsRoutes from './app/news/news.routes.js';
+import cartRoutes from './app/basket/basket.routes.js';
+import orderRoutes from './app/order/order.routes.js';
+import feedBackRoutes from './app/feedBack/feedBack.routes.js';
 
 dotenv.config();
 
@@ -281,6 +285,7 @@ const saveDataToDatabase = async (shop) => {
   }
 };
 
+
 // Продукты
 app.use('/api/products', productRoutes);
 
@@ -288,7 +293,11 @@ app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
-app.use('/api/discussion', discussionRoutes);
+app.use('/api/subCategories', subCategoryRoutes);
+app.use('/api/news', newsRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/feedBack', feedBackRoutes);
 
 // Обработка ошибок
 app.use(notFound);

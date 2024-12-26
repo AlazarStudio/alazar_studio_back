@@ -29,8 +29,10 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  title    String
-  products Product[]
+  title     String
+  products  Product[] @relation("ProductCategories")
+  Product   Product?  @relation(fields: [productId], references: [id])
+  productId Int?
 }
 
 model Product {
@@ -38,25 +40,11 @@ model Product {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  name         String
-  organization String
-  description  String
-  tags         String[]
-  img          String[]
-  price        Int?
+  name  String
+  price Int?
+  img   String[]
 
   categories Category[]
-}
-
-model Discussion {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  name    String
-  phone   String
-  email   String
-  company String
-  budget  Int
-  message String
+  Category   Category?  @relation(fields: [categoryId], references: [id])
+  categoryId Int?
 }
