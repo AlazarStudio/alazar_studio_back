@@ -4,7 +4,7 @@ import { prisma } from '../prisma.js';
 // @desc    Get products with pagination, sorting, and filtering
 // @route   GET /api/products
 // @access  Private
-export const getProducts = asyncHandler(async (req, res) => {
+export const getShops = asyncHandler(async (req, res) => {
   try {
     const { range, sort, filter } = req.query;
 
@@ -26,7 +26,7 @@ export const getProducts = asyncHandler(async (req, res) => {
       return acc;
     }, {});
 
-    const totalProducts = await prisma.product.count({ where });
+    const totalProducts = await prisma.shop.count({ where });
 
     const products = await prisma.product.findMany({
       where,
@@ -77,8 +77,7 @@ export const getProduct = asyncHandler(async (req, res) => {
 export const createNewProduct = asyncHandler(async (req, res) => {
   console.log('Request body:', req.body);
 
-  const { name, price, img, description, categoryIds, organization, website } =
-    req.body;
+  const { name, price, img, description, categoryIds, organization } = req.body;
 
   if (!name || !price || !categoryIds || categoryIds.length === 0) {
     res.status(400);
@@ -111,8 +110,7 @@ export const createNewProduct = asyncHandler(async (req, res) => {
         price: parseFloat(price),
         description,
         organization,
-        tags,
-        website, // Добавляем теги как названия категорий
+        tags, // Добавляем теги как названия категорий
         categories: {
           connect: categoryIds.map((id) => ({ id: parseInt(id, 10) })), // Привязываем категории
         },
@@ -132,15 +130,14 @@ export const createNewProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private
 export const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, img, categoryIds, website } = req.body;
+  const { name, price, description, img, categoryIds } = req.body;
 
   // Формируем объект данных для обновления
   const updateData = {
     ...(name && { name }), // Обновляем имя, если оно передано
     ...(price && { price: parseFloat(price) }), // Преобразуем цену в число
     ...(description && { description }), // Обновляем описание
-    ...(img && { img }),
-    ...(website && { website }),
+    ...(img && { img }), // Обновляем изображения
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })), // Устанавливаем новые категории, удаляя старые связи

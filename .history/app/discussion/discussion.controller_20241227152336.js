@@ -78,7 +78,6 @@ export const getDiscussion = asyncHandler(async (req, res) => {
 export const createDiscussion = asyncHandler(async (req, res) => {
   const { name, phone, email, company, budget, message } = req.body;
 
-  // Проверка обязательных полей
   if (!name || !phone || !email || !company || !budget || !message) {
     console.error('Missing fields:', {
       name,
@@ -89,29 +88,19 @@ export const createDiscussion = asyncHandler(async (req, res) => {
       message,
     });
     res.status(400).json({
-      error: 'Missing name, phone, email, company, budget, or message!',
+      error: 'Missing name, phone, email, company, budget or message!',
     });
     return;
   }
 
-  // Преобразование budget в число
-  const parsedBudget = parseInt(budget, 10);
-
-  if (isNaN(parsedBudget)) {
-    console.error('Invalid budget value:', budget);
-    res.status(400).json({ error: 'Budget must be a valid number!' });
-    return;
-  }
-
   try {
-    // Создание нового обсуждения
     const discussion = await prisma.discussion.create({
       data: {
         name,
         phone,
         email,
         company,
-        budget: parsedBudget, // Передаем число
+        budget,
         message,
       },
     });
@@ -124,8 +113,6 @@ export const createDiscussion = asyncHandler(async (req, res) => {
       .json({ message: 'Internal Server Error', error: error.message });
   }
 });
-
-
 
 // @desc    Update a discussion
 // @route   PUT /api/feedbacks/:id

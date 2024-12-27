@@ -31,8 +31,6 @@ model Category {
 
   title    String
   products Product[]
-  Shop     Shop?     @relation(fields: [shopId], references: [id])
-  shopId   Int?
 }
 
 model Product {
@@ -46,7 +44,6 @@ model Product {
   tags         String[]
   img          String[]
   price        Int?
-  website      String
 
   categories Category[]
 }

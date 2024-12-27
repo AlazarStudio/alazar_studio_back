@@ -16,7 +16,6 @@ import userRoutes from './app/user/user.routes.js';
 import productRoutes from './app/product/product.routes.js';
 import categoryRoutes from './app/category/category.routes.js';
 import discussionRoutes from './app/discussion/discussion.routes.js';
-import shopRoutes from './app/shop/shop.routes.js';
 
 dotenv.config();
 
@@ -290,7 +289,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/discussions', discussionRoutes);
-app.use('/api/shops', shopRoutes);
+app.use('/api/shops', discussionRoutes);
 
 // Обработка ошибок
 app.use(notFound);

@@ -46,7 +46,7 @@ model Product {
   tags         String[]
   img          String[]
   price        Int?
-  website      String
+  website String
 
   categories Category[]
 }

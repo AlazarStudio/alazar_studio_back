@@ -131,7 +131,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   try {
     const updatedCategory = await prisma.category.update({
       where: { id: parseInt(id, 10) },
-      data: { title },
+      data: { title, img },
     });
 
     res.json(updatedCategory);

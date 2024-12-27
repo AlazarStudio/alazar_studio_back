@@ -31,8 +31,6 @@ model Category {
 
   title    String
   products Product[]
-  Shop     Shop?     @relation(fields: [shopId], references: [id])
-  shopId   Int?
 }
 
 model Product {
@@ -46,25 +44,11 @@ model Product {
   tags         String[]
   img          String[]
   price        Int?
-  website      String
 
   categories Category[]
 }
 
-model Shop {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
-  name         String
-  organization String
-  description  String
-  tags         String[]
-  img          String[]
-  price        Int?
-
-  categories Category[]
-}
 
 model Discussion {
   id        Int      @id @default(autoincrement())

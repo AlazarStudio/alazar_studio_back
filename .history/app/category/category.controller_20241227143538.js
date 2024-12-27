@@ -99,16 +99,19 @@ export const getCategory = asyncHandler(async (req, res) => {
 export const createNewCategory = asyncHandler(async (req, res) => {
   const { title} = req.body;
 
+
+  console.log(images);
   
 
-  if (!title ) {
-    res.status(400).json({ error: 'Title are required' });
+  if (!title || !img) {
+    res.status(400).json({ error: 'Title and img are required' });
     return;
   }
 
   const category = await prisma.category.create({
     data: {
       title,
+      img, // img теперь одиночная строка
     },
   });
 
@@ -120,10 +123,12 @@ export const createNewCategory = asyncHandler(async (req, res) => {
 // @access  Private
 export const updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, img } = req.body;
+
+  console.log(req.body);
   
 
-  if (!title) {
+  if (!title || !img) {
     res.status(400).json({ error: 'Title is required for update' });
     return;
   }
@@ -131,7 +136,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   try {
     const updatedCategory = await prisma.category.update({
       where: { id: parseInt(id, 10) },
-      data: { title },
+      data: { title, img },
     });
 
     res.json(updatedCategory);

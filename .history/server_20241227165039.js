@@ -290,7 +290,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/discussions', discussionRoutes);
-app.use('/api/shops', shopRoutes);
+app.use('/api/shops', shops);
 
 // Обработка ошибок
 app.use(notFound);

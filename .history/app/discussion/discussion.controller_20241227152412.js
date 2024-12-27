@@ -94,15 +94,6 @@ export const createDiscussion = asyncHandler(async (req, res) => {
     return;
   }
 
-  // Преобразование budget в число
-  const parsedBudget = parseInt(budget, 10);
-
-  if (isNaN(parsedBudget)) {
-    console.error('Invalid budget value:', budget);
-    res.status(400).json({ error: 'Budget must be a valid number!' });
-    return;
-  }
-
   try {
     // Создание нового обсуждения
     const discussion = await prisma.discussion.create({
@@ -111,7 +102,7 @@ export const createDiscussion = asyncHandler(async (req, res) => {
         phone,
         email,
         company,
-        budget: parsedBudget, // Передаем число
+        budget,
         message,
       },
     });
@@ -124,7 +115,6 @@ export const createDiscussion = asyncHandler(async (req, res) => {
       .json({ message: 'Internal Server Error', error: error.message });
   }
 });
-
 
 
 // @desc    Update a discussion

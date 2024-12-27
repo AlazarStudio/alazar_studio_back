@@ -123,7 +123,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   const { title } = req.body;
   
 
-  if (!title) {
+  if (!title || !img) {
     res.status(400).json({ error: 'Title is required for update' });
     return;
   }
@@ -131,7 +131,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   try {
     const updatedCategory = await prisma.category.update({
       where: { id: parseInt(id, 10) },
-      data: { title },
+      data: { title, img },
     });
 
     res.json(updatedCategory);

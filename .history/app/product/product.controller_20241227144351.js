@@ -16,28 +16,34 @@ export const getProducts = asyncHandler(async (req, res) => {
 
     const filters = filter ? JSON.parse(filter) : {};
     const where = Object.entries(filters).reduce((acc, [field, value]) => {
+      // Обработка фильтров
       if (typeof value === 'string') {
-        acc[field] = { contains: value, mode: 'insensitive' };
+        acc[field] = { contains: value, mode: 'insensitive' }; // Для строк
       } else if (Array.isArray(value)) {
-        acc[field] = { in: value };
+        acc[field] = { in: value }; // Для массивов
       } else if (typeof value === 'number') {
-        acc[field] = { equals: value };
+        acc[field] = { equals: value }; // Для чисел
       }
       return acc;
     }, {});
 
+    // Подсчёт общего количества продуктов с фильтром
     const totalProducts = await prisma.product.count({ where });
 
+    // Получение продуктов с пагинацией, сортировкой и фильтрацией
     const products = await prisma.product.findMany({
       where,
       skip: rangeStart,
       take: rangeEnd - rangeStart + 1,
       orderBy: { [sortField]: sortOrder },
       include: {
-        categories: true, // Включаем связанные категории
+        // category: true, // Если нужно, добавьте связанные поля
+        // subCategory: true,
+        // businessSolution: true,
       },
     });
 
+    // Установка заголовка Content-Range для пагинации
     res.set(
       'Content-Range',
       `products ${rangeStart}-${Math.min(rangeEnd, totalProducts - 1)}/${totalProducts}`
@@ -59,7 +65,10 @@ export const getProduct = asyncHandler(async (req, res) => {
   const product = await prisma.product.findUnique({
     where: { id: +req.params.id },
     include: {
-      categories: true, // Включаем связанные категории
+      // characteristics: true,
+      // category: true,
+      // subCategory: true,
+      // businessSolution: true,
     },
   });
 
@@ -75,35 +84,22 @@ export const getProduct = asyncHandler(async (req, res) => {
 // @route   POST /api/products
 // @access  Private
 export const createNewProduct = asyncHandler(async (req, res) => {
-  console.log('Request body:', req.body);
-
-  const { name, price, img, description, categoryIds, organization, website } =
+  const { name, price, img, description, categoryIds, organization, tags } =
     req.body;
 
+  // Обработка изображений
+  const images = (img || []).map((image) =>
+    typeof image === 'object' ? `/uploads/${image.rawFile.path}` : image
+  );
+
+  // Проверка обязательных данных
   if (!name || !price || !categoryIds || categoryIds.length === 0) {
     res.status(400);
     throw new Error('Name, price, and at least one categoryId are required!');
   }
 
   try {
-    // Получаем названия категорий по их ID
-    const categories = await prisma.category.findMany({
-      where: { id: { in: categoryIds.map((id) => parseInt(id, 10)) } },
-      select: { title: true }, // Только названия категорий
-    });
-
-    const tags = categories.map((category) => category.title);
-
-    console.log('Generated tags:', tags);
-
-    // Обработка изображений
-    const images = (img || []).map((image) =>
-      typeof image === 'object' ? `/uploads/${image.rawFile.path}` : image
-    );
-
-    console.log('Processed images:', images);
-
-    // Создаем продукт
+    // Создание нового продукта с привязкой к категориям
     const product = await prisma.product.create({
       data: {
         name,
@@ -112,14 +108,12 @@ export const createNewProduct = asyncHandler(async (req, res) => {
         description,
         organization,
         tags,
-        website, // Добавляем теги как названия категорий
         categories: {
-          connect: categoryIds.map((id) => ({ id: parseInt(id, 10) })), // Привязываем категории
+          connect: categoryIds.map((id) => ({ id: parseInt(id, 10) })), // Привязываем категории по их ID
         },
       },
     });
 
-    console.log('Product created:', product);
     res.status(201).json(product);
   } catch (error) {
     console.error('Error creating product:', error);
@@ -132,15 +126,14 @@ export const createNewProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private
 export const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, img, categoryIds, website } = req.body;
+  const { name, price, description, img, categoryIds } = req.body;
 
   // Формируем объект данных для обновления
   const updateData = {
     ...(name && { name }), // Обновляем имя, если оно передано
     ...(price && { price: parseFloat(price) }), // Преобразуем цену в число
     ...(description && { description }), // Обновляем описание
-    ...(img && { img }),
-    ...(website && { website }),
+    ...(img && { img }), // Обновляем изображения
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })), // Устанавливаем новые категории, удаляя старые связи

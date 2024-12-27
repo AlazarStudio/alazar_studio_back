@@ -77,8 +77,7 @@ export const getProduct = asyncHandler(async (req, res) => {
 export const createNewProduct = asyncHandler(async (req, res) => {
   console.log('Request body:', req.body);
 
-  const { name, price, img, description, categoryIds, organization, website } =
-    req.body;
+  const { name, price, img, description, categoryIds, organization, website } = req.body;
 
   if (!name || !price || !categoryIds || categoryIds.length === 0) {
     res.status(400);
@@ -140,7 +139,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     ...(price && { price: parseFloat(price) }), // Преобразуем цену в число
     ...(description && { description }), // Обновляем описание
     ...(img && { img }),
-    ...(website && { website }),
+    ...(website && { img }), 
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })), // Устанавливаем новые категории, удаляя старые связи
