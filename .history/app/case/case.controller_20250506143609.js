@@ -125,12 +125,9 @@ export const updateCase = asyncHandler(async (req, res) => {
     ...(price !== undefined && { price: parseFloat(price) }),
     ...(img && { img }),
     ...(website && { website }),
-    ...(developerIds && {
-      developers: {
-        set: developerIds.map((id) => ({ id })),
-      },
+    ...(developerId && {
+      developer: { connect: { id: developerId } },
     }),
-
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })),

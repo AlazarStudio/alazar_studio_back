@@ -1,8 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import { prisma } from '../prisma.js';
 
-// Получить список Cases с пагинацией, сортировкой и фильтрацией
-export const getCases = asyncHandler(async (req, res) => {
+// Получить caseHomes с пагинацией, сортировкой и фильтрацией
+export const getCaseHomes = asyncHandler(async (req, res) => {
   try {
     const { range, sort, filter } = req.query;
 
@@ -24,60 +24,60 @@ export const getCases = asyncHandler(async (req, res) => {
       return acc;
     }, {});
 
-    const totalCases = await prisma.case.count({ where });
+    const totalCaseHomes = await prisma.caseHome.count({ where });
 
-    const cases = await prisma.case.findMany({
+    const caseHomes = await prisma.caseHome.findMany({
       where,
       skip: rangeStart,
       take: rangeEnd - rangeStart + 1,
       orderBy: { [sortField]: sortOrder },
       include: {
-        developers: { select: { id: true, name: true } }, // ✅ исправлено
+        developers: { select: { id: true, name: true } },
         categories: true,
       },
     });
 
     res.set(
       'Content-Range',
-      `cases ${rangeStart}-${Math.min(rangeEnd, totalCases - 1)}/${totalCases}`
+      `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCaseHomes - 1)}/${totalCaseHomes}`
     );
 
-    res.json(cases);
+    res.json(caseHomes);
   } catch (error) {
-    console.error('Error fetching cases:', error);
+    console.error('Error fetching case homes:', error);
     res
       .status(500)
       .json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
-// Получить один Case по ID
-export const getCase = asyncHandler(async (req, res) => {
+// Получить один caseHome по ID
+export const getCaseHome = asyncHandler(async (req, res) => {
   try {
-    const singleCase = await prisma.case.findUnique({
+    const caseHome = await prisma.caseHome.findUnique({
       where: { id: +req.params.id },
       include: {
-        developers: true,
+        developers: true, // исправлено
         categories: true,
       },
     });
 
-    if (!singleCase) {
+    if (!caseHome) {
       res.status(404);
-      throw new Error('Case not found!');
+      throw new Error('Case Home not found!');
     }
 
-    res.json(singleCase);
+    res.json(caseHome);
   } catch (error) {
-    console.error('Error fetching case:', error);
+    console.error('Error fetching case home:', error);
     res
       .status(500)
       .json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
-// Создать новый Case
-export const createNewCase = asyncHandler(async (req, res) => {
+// Создать новый caseHome
+export const createNewCaseHome = asyncHandler(async (req, res) => {
   const { name, price, img, developerIds, categoryIds, website } = req.body;
 
   if (!name || !categoryIds || categoryIds.length === 0) {
@@ -90,7 +90,7 @@ export const createNewCase = asyncHandler(async (req, res) => {
       typeof image === 'object' ? `/uploads/${image.rawFile.path}` : image
     );
 
-    const createdCase = await prisma.case.create({
+    const caseHome = await prisma.caseHome.create({
       data: {
         name,
         img: images,
@@ -107,18 +107,18 @@ export const createNewCase = asyncHandler(async (req, res) => {
       },
     });
 
-    res.status(201).json(createdCase);
+    res.status(201).json(caseHome);
   } catch (error) {
-    console.error('Error creating case:', error);
+    console.error('Error creating case home:', error);
     res
       .status(500)
-      .json({ message: 'Failed to create case', error: error.message });
+      .json({ message: 'Failed to create case home', error: error.message });
   }
 });
 
-// Обновить Case
-export const updateCase = asyncHandler(async (req, res) => {
-  const { name, price, img, categoryIds, developerIds, website } = req.body;
+// Обновить caseHome
+export const updateCaseHome = asyncHandler(async (req, res) => {
+  const { name, price, img, categoryIds, developerId, website } = req.body;
 
   const updateData = {
     ...(name && { name }),
@@ -130,7 +130,7 @@ export const updateCase = asyncHandler(async (req, res) => {
         set: developerIds.map((id) => ({ id })),
       },
     }),
-
+    
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })),
@@ -139,32 +139,32 @@ export const updateCase = asyncHandler(async (req, res) => {
   };
 
   try {
-    const updatedCase = await prisma.case.update({
+    const caseHome = await prisma.caseHome.update({
       where: { id: parseInt(req.params.id, 10) },
       data: updateData,
     });
 
-    res.status(200).json(updatedCase);
+    res.status(200).json(caseHome);
   } catch (error) {
-    console.error('Error updating case:', error);
+    console.error('Error updating case home:', error);
     res
       .status(500)
-      .json({ message: 'Failed to update case', error: error.message });
+      .json({ message: 'Failed to update case home', error: error.message });
   }
 });
 
-// Удалить Case
-export const deleteCase = asyncHandler(async (req, res) => {
+// Удалить caseHome
+export const deleteCaseHome = asyncHandler(async (req, res) => {
   try {
-    await prisma.case.delete({
+    await prisma.caseHome.delete({
       where: { id: +req.params.id },
     });
 
-    res.json({ message: 'Case deleted!' });
+    res.json({ message: 'Case Home deleted!' });
   } catch (error) {
-    console.error('Error deleting case:', error);
+    console.error('Error deleting case home:', error);
     res
       .status(500)
-      .json({ message: 'Error deleting case', error: error.message });
+      .json({ message: 'Error deleting case home', error: error.message });
   }
 });

@@ -60,8 +60,8 @@ export const getDeveloper = asyncHandler(async (req, res) => {
   const developer = await prisma.developer.findUnique({
     where: { id: +req.params.id },
     include: {
-      cases: true, // Включаем связанные cases
-      caseHomes: true, // Включаем связанные case homes
+      Cases: true, // Включаем связанные cases
+      CaseHomes: true, // Включаем связанные case homes
     },
   });
 

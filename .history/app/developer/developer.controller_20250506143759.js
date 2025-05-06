@@ -61,7 +61,7 @@ export const getDeveloper = asyncHandler(async (req, res) => {
     where: { id: +req.params.id },
     include: {
       cases: true, // Включаем связанные cases
-      caseHomes: true, // Включаем связанные case homes
+      CaseHomes: true, // Включаем связанные case homes
     },
   });
 

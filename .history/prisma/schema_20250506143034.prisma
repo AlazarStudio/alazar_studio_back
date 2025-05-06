@@ -53,8 +53,10 @@ model Case {
   price     Int?
   website   String?
 
-  developers Developer[] @relation("CaseDevelopers") // М:N связь
-  categories Category[]  @relation("CaseCategories")
+  developer   Developer? @relation(fields: [developerId], references: [id])
+  developerId Int?
+
+  categories Category[] @relation("CaseCategories")
 }
 
 model CaseHome {
@@ -66,8 +68,10 @@ model CaseHome {
   price     Int?
   website   String?
 
-  developers Developer[] @relation("CaseHomeDevelopers") // М:N связь
-  categories Category[]  @relation("CaseHomeCategories")
+  developer   Developer? @relation(fields: [developerId], references: [id])
+  developerId Int?
+
+  categories Category[] @relation("CaseHomeCategories")
 }
 
 model Category {

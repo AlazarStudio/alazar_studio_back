@@ -45,9 +45,7 @@ export const getCaseHomes = asyncHandler(async (req, res) => {
     res.json(caseHomes);
   } catch (error) {
     console.error('Error fetching case homes:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
@@ -57,7 +55,7 @@ export const getCaseHome = asyncHandler(async (req, res) => {
     const caseHome = await prisma.caseHome.findUnique({
       where: { id: +req.params.id },
       include: {
-        developers: true, // исправлено
+        developers: true,  // исправлено
         categories: true,
       },
     });
@@ -70,15 +68,13 @@ export const getCaseHome = asyncHandler(async (req, res) => {
     res.json(caseHome);
   } catch (error) {
     console.error('Error fetching case home:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
 // Создать новый caseHome
 export const createNewCaseHome = asyncHandler(async (req, res) => {
-  const { name, price, img, developerIds, categoryIds, website } = req.body;
+  const { name, price, img, developerId, categoryIds, website } = req.body;
 
   if (!name || !categoryIds || categoryIds.length === 0) {
     res.status(400);
@@ -96,11 +92,7 @@ export const createNewCaseHome = asyncHandler(async (req, res) => {
         img: images,
         price: price ? parseFloat(price) : null,
         website,
-        developers:
-          developerIds && developerIds.length > 0
-            ? { connect: developerIds.map((id) => ({ id })) }
-            : undefined,
-
+        developer: developerId ? { connect: { id: developerId } } : undefined,
         categories: {
           connect: categoryIds.map((id) => ({ id: parseInt(id, 10) })),
         },
@@ -110,27 +102,22 @@ export const createNewCaseHome = asyncHandler(async (req, res) => {
     res.status(201).json(caseHome);
   } catch (error) {
     console.error('Error creating case home:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to create case home', error: error.message });
+    res.status(500).json({ message: 'Failed to create case home', error: error.message });
   }
 });
 
 // Обновить caseHome
 export const updateCaseHome = asyncHandler(async (req, res) => {
-  const { name, price, img, categoryIds, developerIds, website } = req.body;
+  const { name, price, img, categoryIds, developerId, website } = req.body;
 
   const updateData = {
     ...(name && { name }),
     ...(price !== undefined && { price: parseFloat(price) }),
     ...(img && { img }),
     ...(website && { website }),
-    ...(developerIds && {
-      developers: {
-        set: developerIds.map((id) => ({ id })),
-      },
+    ...(developerId && {
+      developer: { connect: { id: developerId } },
     }),
-
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })),
@@ -147,9 +134,7 @@ export const updateCaseHome = asyncHandler(async (req, res) => {
     res.status(200).json(caseHome);
   } catch (error) {
     console.error('Error updating case home:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to update case home', error: error.message });
+    res.status(500).json({ message: 'Failed to update case home', error: error.message });
   }
 });
 
@@ -163,8 +148,6 @@ export const deleteCaseHome = asyncHandler(async (req, res) => {
     res.json({ message: 'Case Home deleted!' });
   } catch (error) {
     console.error('Error deleting case home:', error);
-    res
-      .status(500)
-      .json({ message: 'Error deleting case home', error: error.message });
+    res.status(500).json({ message: 'Error deleting case home', error: error.message });
   }
 });

@@ -118,19 +118,16 @@ export const createNewCase = asyncHandler(async (req, res) => {
 
 // Обновить Case
 export const updateCase = asyncHandler(async (req, res) => {
-  const { name, price, img, categoryIds, developerIds, website } = req.body;
+  const { name, price, img, categoryIds, developerId, website } = req.body;
 
   const updateData = {
     ...(name && { name }),
     ...(price !== undefined && { price: parseFloat(price) }),
     ...(img && { img }),
     ...(website && { website }),
-    ...(developerIds && {
-      developers: {
-        set: developerIds.map((id) => ({ id })),
-      },
+    ...(developerId && {
+      developer: { connect: { id: developerId } },
     }),
-
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })),

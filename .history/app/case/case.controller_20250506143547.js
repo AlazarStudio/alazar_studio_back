@@ -34,7 +34,7 @@ export const getCases = asyncHandler(async (req, res) => {
       include: {
         developers: { select: { id: true, name: true } }, // ✅ исправлено
         categories: true,
-      },
+      }
     });
 
     res.set(
@@ -45,9 +45,7 @@ export const getCases = asyncHandler(async (req, res) => {
     res.json(cases);
   } catch (error) {
     console.error('Error fetching cases:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
@@ -70,9 +68,7 @@ export const getCase = asyncHandler(async (req, res) => {
     res.json(singleCase);
   } catch (error) {
     console.error('Error fetching case:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
@@ -96,11 +92,7 @@ export const createNewCase = asyncHandler(async (req, res) => {
         img: images,
         price: price ? parseFloat(price) : null,
         website,
-        developers:
-          developerIds && developerIds.length > 0
-            ? { connect: developerIds.map((id) => ({ id })) }
-            : undefined,
-
+        developer: developerId ? { connect: { id: developerId } } : undefined,
         categories: {
           connect: categoryIds.map((id) => ({ id: parseInt(id, 10) })),
         },
@@ -110,27 +102,22 @@ export const createNewCase = asyncHandler(async (req, res) => {
     res.status(201).json(createdCase);
   } catch (error) {
     console.error('Error creating case:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to create case', error: error.message });
+    res.status(500).json({ message: 'Failed to create case', error: error.message });
   }
 });
 
 // Обновить Case
 export const updateCase = asyncHandler(async (req, res) => {
-  const { name, price, img, categoryIds, developerIds, website } = req.body;
+  const { name, price, img, categoryIds, developerId, website } = req.body;
 
   const updateData = {
     ...(name && { name }),
     ...(price !== undefined && { price: parseFloat(price) }),
     ...(img && { img }),
     ...(website && { website }),
-    ...(developerIds && {
-      developers: {
-        set: developerIds.map((id) => ({ id })),
-      },
+    ...(developerId && {
+      developer: { connect: { id: developerId } },
     }),
-
     ...(categoryIds && {
       categories: {
         set: categoryIds.map((id) => ({ id })),
@@ -147,9 +134,7 @@ export const updateCase = asyncHandler(async (req, res) => {
     res.status(200).json(updatedCase);
   } catch (error) {
     console.error('Error updating case:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to update case', error: error.message });
+    res.status(500).json({ message: 'Failed to update case', error: error.message });
   }
 });
 
@@ -163,8 +148,6 @@ export const deleteCase = asyncHandler(async (req, res) => {
     res.json({ message: 'Case deleted!' });
   } catch (error) {
     console.error('Error deleting case:', error);
-    res
-      .status(500)
-      .json({ message: 'Error deleting case', error: error.message });
+    res.status(500).json({ message: 'Error deleting case', error: error.message });
   }
 });
