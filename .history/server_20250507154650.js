@@ -13,10 +13,12 @@ import { prisma } from './app/prisma.js';
 
 import authRoutes from './app/auth/auth.routes.js';
 import userRoutes from './app/user/user.routes.js';
-import developerRoutes from './app/product/product.routes.js';
+import developerRoutes from './app/developer/developer.routes.js';
 import categoryRoutes from './app/category/category.routes.js';
 import discussionRoutes from './app/discussion/discussion.routes.js';
 import shopRoutes from './app/shop/shop.routes.js';
+import caseRoutes from './app/case/case.routes.js';
+import caseHomeRoutes from './app/caseHome/caseHome.routes.js';
 
 dotenv.config();
 
@@ -282,14 +284,15 @@ const saveDataToDatabase = async (shop) => {
   }
 };
 
-// Продукты
-app.use('/api/products', productRoutes);
-
-// Остальные маршруты
+// Маршруты
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/discussions', discussionRoutes);
+app.use('/api/shops', shopRoutes);
+app.use('/api/developers', developerRoutes);
+app.use('/api/cases', caseRoutes);
+app.use('/api/casesHome', caseHomeRoutes);
 app.use('/api/shops', shopRoutes);
 
 // Обработка ошибок
@@ -297,7 +300,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Запуск сервера
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
