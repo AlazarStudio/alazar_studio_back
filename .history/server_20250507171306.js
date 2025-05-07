@@ -121,6 +121,7 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
       // Определяем расширение файла
       const ext = path.extname(file.originalname).toLowerCase();
 
+
       // Если это не GIF, конвертируем изображение в формат WebP
       if (ext !== '.gif') {
         const webpFilename = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
@@ -132,12 +133,6 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
           .toFile(webpFilePath);
 
         filePaths.push(`/uploads/${webpFilename}`);
-      } else {
-        // Просто сохраняем gif
-        const gifFilename = `${Date.now()}-${file.originalname}`;
-        const gifPath = path.join('uploads', gifFilename);
-        fs.writeFileSync(gifPath, file.buffer);
-        filePaths.push(`/uploads/${gifFilename}`);
       }
     }
 

@@ -132,12 +132,6 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
           .toFile(webpFilePath);
 
         filePaths.push(`/uploads/${webpFilename}`);
-      } else {
-        // Просто сохраняем gif
-        const gifFilename = `${Date.now()}-${file.originalname}`;
-        const gifPath = path.join('uploads', gifFilename);
-        fs.writeFileSync(gifPath, file.buffer);
-        filePaths.push(`/uploads/${gifFilename}`);
       }
     }
 
