@@ -66,7 +66,7 @@ model CaseHome {
   img       String[]
   price     Int?
   website   String?
-    date      DateTime?
+   date      DateTime?
 
   developers Developer[] @relation("CaseHomeDevelopers") // М:N связь
   categories Category[]  @relation("CaseHomeCategories")

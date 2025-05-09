@@ -29,7 +29,6 @@ const __dirname = path.resolve();
 app.use(
   cors({
     // origin: ['http://127.0.0.1:5173', 'http://localhost:5000'],
-    origin: '*',
     credentials: true, // Включение поддержки куки
     exposedHeaders: ['Content-Range'], // Если требуется для API
   })

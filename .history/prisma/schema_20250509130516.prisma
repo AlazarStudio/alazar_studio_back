@@ -68,7 +68,7 @@ model CaseHome {
   website   String?
     date      DateTime?
 
-  developers Developer[] @relation("CaseHomeDevelopers") // М:N связь
+  developers Developer[ъ @relation("CaseHomeDevelopers") // М:N связь
   categories Category[]  @relation("CaseHomeCategories")
 }
 
