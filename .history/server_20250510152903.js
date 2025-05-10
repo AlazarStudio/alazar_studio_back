@@ -40,7 +40,7 @@ app.use(
     origin: ['https://saturn-milk.alazarstudio.ru'],
     credentials: true,
     exposedHeaders: ['Content-Range'],
-  }),
+  })
 );
 
 const storage1 = multer.memoryStorage();
@@ -115,54 +115,6 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.post('/uploads', upload1.array('img', 10), async (req, res) => {
-  try {
-    console.log('Файлы, полученные multer:', req.files);
-
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: 'Файлы не загружены' });
-    }
-
-    const filePaths = [];
-
-    for (const file of req.files) {
-      const ext = path.extname(file.originalname).toLowerCase();
-
-      // Санитизация имени: убираем пробелы и символы
-      const baseName = file.originalname
-        .split('.')[0]
-        .replace(/\s+/g, '-') // пробелы → дефис
-        .replace(/[^a-zA-Z0-9-_]/g, ''); // удаляем всё кроме букв, цифр, - и _
-
-      const timestamp = Date.now();
-
-      if (ext !== '.gif') {
-        const webpFilename = `${timestamp}-${baseName}.webp`;
-        const webpFilePath = path.join(__dirname, 'uploads', webpFilename);
-
-        await sharp(file.buffer)
-          .webp({ quality: 80 })
-          .toFile(webpFilePath);
-
-        filePaths.push(`/uploads/${webpFilename}`);
-      } else {
-        const gifFilename = `${timestamp}-${baseName}.gif`;
-        const gifPath = path.join(__dirname, 'uploads', gifFilename);
-
-        fs.writeFileSync(gifPath, file.buffer);
-        filePaths.push(`/uploads/${gifFilename}`);
-      }
-    }
-
-    console.log('Сохранённые пути:', filePaths);
-
-    res.status(200).json({ filePaths });
-  } catch (error) {
-    console.error('Ошибка при загрузке файлов:', error);
-    res.status(500).json({ message: 'Ошибка при загрузке файлов', error });
-  }
-});
 
 // app.post('/uploads', upload1.array('img', 10), async (req, res) => {
 //   try {

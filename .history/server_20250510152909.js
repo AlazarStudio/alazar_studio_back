@@ -40,7 +40,7 @@ app.use(
     origin: ['https://saturn-milk.alazarstudio.ru'],
     credentials: true,
     exposedHeaders: ['Content-Range'],
-  }),
+  })
 );
 
 const storage1 = multer.memoryStorage();
@@ -132,8 +132,8 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
       // Санитизация имени: убираем пробелы и символы
       const baseName = file.originalname
         .split('.')[0]
-        .replace(/\s+/g, '-') // пробелы → дефис
-        .replace(/[^a-zA-Z0-9-_]/g, ''); // удаляем всё кроме букв, цифр, - и _
+        .replace(/\s+/g, '-')             // пробелы → дефис
+        .replace(/[^a-zA-Z0-9-_]/g, '');   // удаляем всё кроме букв, цифр, - и _
 
       const timestamp = Date.now();
 
@@ -163,6 +163,7 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
     res.status(500).json({ message: 'Ошибка при загрузке файлов', error });
   }
 });
+
 
 // app.post('/uploads', upload1.array('img', 10), async (req, res) => {
 //   try {
