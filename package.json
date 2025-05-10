@@ -14,7 +14,7 @@
   "description": "",
   "dependencies": {
     "@faker-js/faker": "^9.0.3",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^6.7.0",
     "argon2": "^0.40.3",
     "axios": "^1.7.3",
     "bcrypt": "^5.1.1",
@@ -31,7 +31,7 @@
     "nodemon": "^3.1.4",
     "pg": "^8.12.0",
     "prettier": "^3.3.3",
-    "prisma": "^5.17.0",
+    "prisma": "^6.7.0",
     "ra-data-simple-rest": "^5.4.0",
     "react-admin": "^5.4.0",
     "sharp": "^0.33.5",
