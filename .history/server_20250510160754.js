@@ -35,13 +35,13 @@ const __dirname = path.resolve();
 //   }),
 // );
 
-app.use(
-  cors({
-    origin: ['https://saturn-milk.alazarstudio.ru', 'http://127.0.0.1:5173', 'http://localhost:5000'],
-    credentials: true,
-    exposedHeaders: ['Content-Range'],
-  }),
-);
+// app.use(
+//   cors({
+//     origin: ['https://saturn-milk.alazarstudio.ru'],
+//     credentials: true,
+//     exposedHeaders: ['Content-Range'],
+//   })
+// );
 
 // app.use(
 //   cors({
