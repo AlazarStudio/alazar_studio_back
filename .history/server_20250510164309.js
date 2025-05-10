@@ -26,23 +26,22 @@ const app = express();
 const __dirname = path.resolve();
 
 // Настройки CORS
-// app.use(
-//   cors({
-//     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-
-//     // origin: '*',
-//     credentials: true, // Включение поддержки куки
-//     exposedHeaders: ['Content-Range'], // Если требуется для API
-//   })
-// );
-
 app.use(
   cors({
-    origin: ['https://saturn-milk.alazarstudio.ru'],
-    credentials: true,
-    exposedHeaders: ['Content-Range'],
+    origin: ['http://127.0.0.1:5173'],
+    // origin: '*',
+    credentials: true, // Включение поддержки куки
+    exposedHeaders: ['Content-Range'], // Если требуется для API
   })
 );
+
+// app.use(
+//   cors({
+//     origin: ['https://saturn-milk.alazarstudio.ru'],
+//     credentials: true,
+//     exposedHeaders: ['Content-Range'],
+//   })
+// );
 
 const storage1 = multer.memoryStorage();
 

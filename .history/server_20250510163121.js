@@ -28,21 +28,21 @@ const __dirname = path.resolve();
 // Настройки CORS
 // app.use(
 //   cors({
-//     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-
-//     // origin: '*',
+//     // origin: ['http://127.0.0.1:5173', 'http://localhost:5000'],
+//     origin: '*',
 //     credentials: true, // Включение поддержки куки
 //     exposedHeaders: ['Content-Range'], // Если требуется для API
 //   })
 // );
 
-app.use(
-  cors({
-    origin: ['https://saturn-milk.alazarstudio.ru'],
-    credentials: true,
-    exposedHeaders: ['Content-Range'],
-  })
-);
+// app.use(
+//   cors({
+//     origin: ['https://saturn-milk.alazarstudio.ru'],
+//     credentials: true,
+//     exposedHeaders: ['Content-Range'],
+//   })
+// );
+
 
 const storage1 = multer.memoryStorage();
 
@@ -127,30 +127,29 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
 
     const filePaths = [];
 
-    await Promise.all(
-      req.files.map(async (file) => {
-        const ext = path.extname(file.originalname).toLowerCase();
-        const baseName = file.originalname
-          .split('.')[0]
-          .replace(/\s+/g, '-')
-          .replace(/[^a-zA-Z0-9-_]/g, '');
-        const timestamp = Date.now();
+    for (const file of req.files) {
+      // Определяем расширение файла
+      const ext = path.extname(file.originalname).toLowerCase();
 
-        if (ext !== '.gif') {
-          const webpFilename = `${timestamp}-${baseName}.webp`;
-          const webpFilePath = path.join(__dirname, 'uploads', webpFilename);
+      // Если это не GIF, конвертируем изображение в формат WebP
+      if (ext !== '.gif') {
+        const webpFilename = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
+        const webpFilePath = path.join('uploads', webpFilename);
 
-          await sharp(file.buffer).webp({ quality: 80 }).toFile(webpFilePath);
+        // Конвертируем изображение в формат WebP с использованием sharp
+        await sharp(file.buffer)
+          .webp({ quality: 80 }) // Настройка качества WebP
+          .toFile(webpFilePath);
 
-          filePaths.push(`/uploads/${webpFilename}`);
-        } else {
-          const gifFilename = `${timestamp}-${baseName}.gif`;
-          const gifPath = path.join(__dirname, 'uploads', gifFilename);
-          fs.writeFileSync(gifPath, file.buffer);
-          filePaths.push(`/uploads/${gifFilename}`);
-        }
-      })
-    );
+        filePaths.push(`/uploads/${webpFilename}`);
+      } else {
+        // Просто сохраняем gif
+        const gifFilename = `${Date.now()}-${file.originalname}`;
+        const gifPath = path.join('uploads', gifFilename);
+        fs.writeFileSync(gifPath, file.buffer);
+        filePaths.push(`/uploads/${gifFilename}`);
+      }
+    }
 
     console.log('Сохранённые пути:', filePaths);
 
