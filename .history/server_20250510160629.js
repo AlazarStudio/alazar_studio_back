@@ -43,14 +43,6 @@ const __dirname = path.resolve();
 //   })
 // );
 
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-    exposedHeaders: ['Content-Range'],
-  })
-);
-
 const storage1 = multer.memoryStorage();
 
 // Настройка `multer` для загрузки файлов

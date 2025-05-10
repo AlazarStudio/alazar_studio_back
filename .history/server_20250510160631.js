@@ -45,7 +45,7 @@ const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin: '*',
+    origin: ['https://saturn-milk.alazarstudio.ru'],
     credentials: true,
     exposedHeaders: ['Content-Range'],
   })
