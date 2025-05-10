@@ -116,48 +116,50 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/uploads', upload1.array('img', 10), async (req, res) => {
-  try {
-    console.log('Файлы, полученные multer:', req.files);
 
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: 'Файлы не загружены' });
-    }
 
-    const filePaths = [];
+// app.post('/uploads', upload1.array('img', 10), async (req, res) => {
+//   try {
+//     console.log('Файлы, полученные multer:', req.files);
 
-    for (const file of req.files) {
-      // Определяем расширение файла
-      const ext = path.extname(file.originalname).toLowerCase();
+//     if (!req.files || req.files.length === 0) {
+//       return res.status(400).json({ message: 'Файлы не загружены' });
+//     }
 
-      // Если это не GIF, конвертируем изображение в формат WebP
-      if (ext !== '.gif') {
-        const webpFilename = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
-        const webpFilePath = path.join('uploads', webpFilename);
+//     const filePaths = [];
 
-        // Конвертируем изображение в формат WebP с использованием sharp
-        await sharp(file.buffer)
-          .webp({ quality: 80 }) // Настройка качества WebP
-          .toFile(webpFilePath);
+//     for (const file of req.files) {
+//       // Определяем расширение файла
+//       const ext = path.extname(file.originalname).toLowerCase();
 
-        filePaths.push(`/uploads/${webpFilename}`);
-      } else {
-        // Просто сохраняем gif
-        const gifFilename = `${Date.now()}-${file.originalname}`;
-        const gifPath = path.join('uploads', gifFilename);
-        fs.writeFileSync(gifPath, file.buffer);
-        filePaths.push(`/uploads/${gifFilename}`);
-      }
-    }
+//       // Если это не GIF, конвертируем изображение в формат WebP
+//       if (ext !== '.gif') {
+//         const webpFilename = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
+//         const webpFilePath = path.join('uploads', webpFilename);
 
-    console.log('Сохранённые пути:', filePaths);
+//         // Конвертируем изображение в формат WebP с использованием sharp
+//         await sharp(file.buffer)
+//           .webp({ quality: 80 }) // Настройка качества WebP
+//           .toFile(webpFilePath);
 
-    res.status(200).json({ filePaths });
-  } catch (error) {
-    console.error('Ошибка при загрузке файлов:', error);
-    res.status(500).json({ message: 'Ошибка при загрузке файлов', error });
-  }
-});
+//         filePaths.push(`/uploads/${webpFilename}`);
+//       } else {
+//         // Просто сохраняем gif
+//         const gifFilename = `${Date.now()}-${file.originalname}`;
+//         const gifPath = path.join('uploads', gifFilename);
+//         fs.writeFileSync(gifPath, file.buffer);
+//         filePaths.push(`/uploads/${gifFilename}`);
+//       }
+//     }
+
+//     console.log('Сохранённые пути:', filePaths);
+
+//     res.status(200).json({ filePaths });
+//   } catch (error) {
+//     console.error('Ошибка при загрузке файлов:', error);
+//     res.status(500).json({ message: 'Ошибка при загрузке файлов', error });
+//   }
+// });
 
 // Маршрут для загрузки XML
 app.post('/api/upload-xml', upload.single('file'), async (req, res) => {
