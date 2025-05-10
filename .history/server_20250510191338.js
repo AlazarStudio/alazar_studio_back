@@ -26,15 +26,15 @@ const app = express();
 const __dirname = path.resolve();
 
 // Настройки CORS
-// app.use(
-//   cors({
-//     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
 
-//     // origin: '*',
-//     credentials: true, // Включение поддержки куки
-//     exposedHeaders: ['Content-Range'], // Если требуется для API
-//   })
-// );
+    // origin: '*',
+    credentials: true, // Включение поддержки куки
+    exposedHeaders: ['Content-Range'], // Если требуется для API
+  })
+);
 
 app.use(
   cors({
@@ -44,13 +44,11 @@ app.use(
   })
 );
 
-app.options(
-  '*',
-  cors({
-    origin: ['https://saturn-milk.alazarstudio.ru'],
-    credentials: true,
-  })
-);
+app.options('*', cors({
+  origin: ['https://saturn-milk.alazarstudio.ru'],
+  credentials: true,
+}));
+
 
 const storage1 = multer.memoryStorage();
 
