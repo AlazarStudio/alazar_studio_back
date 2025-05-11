@@ -41,10 +41,10 @@ export const getCases = asyncHandler(async (req, res) => {
     const totalCases = await prisma.caseHome.count({ where });
     res.set(
       'Content-Range',
-      `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCases - 1)}/${totalCases}`
+      `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCase - 1)}/${totalCaseHomes}`
     );
 
-    res.json(cases);
+    res.json(caseHomes);
   } catch (error) {
     console.error('Error fetching case homes:', error);
     res

@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { prisma } from '../prisma.js';
 
-export const getCases = asyncHandler(async (req, res) => {
+export const getCaseHomes = asyncHandler(async (req, res) => {
   try {
     const { range, sort, filter } = req.query;
 
@@ -26,7 +26,7 @@ export const getCases = asyncHandler(async (req, res) => {
       return acc;
     }, {});
 
-    const cases = await prisma.cases.findMany({
+    const caseHomes = await prisma.caseHome.findMany({
       where,
       skip: rangeStart,
       take: rangeEnd - rangeStart + 1,
@@ -38,13 +38,13 @@ export const getCases = asyncHandler(async (req, res) => {
     });
 
     // Если используешь React Admin или что-то, что требует total
-    const totalCases = await prisma.caseHome.count({ where });
+    const totalCaseHomes = await prisma.caseHome.count({ where });
     res.set(
       'Content-Range',
-      `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCases - 1)}/${totalCases}`
+      `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCaseHomes - 1)}/${totalCaseHomes}`
     );
 
-    res.json(cases);
+    res.json(caseHomes);
   } catch (error) {
     console.error('Error fetching case homes:', error);
     res

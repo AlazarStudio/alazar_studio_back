@@ -44,7 +44,7 @@ export const getCases = asyncHandler(async (req, res) => {
       `caseHomes ${rangeStart}-${Math.min(rangeEnd, totalCases - 1)}/${totalCases}`
     );
 
-    res.json(cases);
+    res.json(caseHomes);
   } catch (error) {
     console.error('Error fetching case homes:', error);
     res
