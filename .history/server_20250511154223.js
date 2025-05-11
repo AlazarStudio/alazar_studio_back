@@ -103,7 +103,7 @@ const upload = multer({
 
 const upload1 = multer({
   storage1,
-  limits: { fileSize: 1024 * 1024 * 48 }, // лимит размера файла 48MB
+  limits: { fileSize: 1024 * 1024 *  }, // лимит размера файла 48MB
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png|gif/;
     const extname = fileTypes.test(
@@ -148,7 +148,7 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
           const webpFilename = `${timestamp}-${baseName}.webp`;
           const webpFilePath = path.join(__dirname, 'uploads', webpFilename);
 
-          await sharp(file.buffer).webp({ quality: 60 }).toFile(webpFilePath);
+          await sharp(file.buffer).webp({ quality: 80 }).toFile(webpFilePath);
 
           filePaths.push(`/uploads/${webpFilename}`);
         } else {

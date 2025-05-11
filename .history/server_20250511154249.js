@@ -148,7 +148,7 @@ app.post('/uploads', upload1.array('img', 10), async (req, res) => {
           const webpFilename = `${timestamp}-${baseName}.webp`;
           const webpFilePath = path.join(__dirname, 'uploads', webpFilename);
 
-          await sharp(file.buffer).webp({ quality: 60 }).toFile(webpFilePath);
+          await sharp(file.buffer).webp({ quality: 80 }).toFile(webpFilePath);
 
           filePaths.push(`/uploads/${webpFilename}`);
         } else {
